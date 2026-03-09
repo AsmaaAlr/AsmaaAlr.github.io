@@ -1,846 +1,639 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Ramadan Mubarak Card Generator</title>
-<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&display=swap" rel="stylesheet" />
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Ramadan Mubarak — Card Generator</title>
+
+<!--
+  FONTS
+  • English: Poppins (substitute for Foco)
+  • Arabic : Tajawal (substitute for كو هدالين)
+
+  TO SWITCH TO YOUR LICENSED FONTS:
+  1. Place your font files next to index.html (e.g. fonts/Foco.woff2)
+  2. Add @font-face blocks in the <style> section below
+  3. Replace 'Poppins' with 'Foco' and 'Tajawal' with your Arabic font name
+     everywhere in the CSS and JS canvas drawing code.
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Tajawal:wght@300;400;700&display=swap" rel="stylesheet"/>
+
 <style>
-  :root {
-    --gold: #c9a84c;
-    --gold-light: #e8c97a;
-    --deep: #0d1b2a;
-    --navy: #1a2d45;
-    --cream: #f5eedc;
-    --accent: #7b4f2a;
-  }
+/* ── Brand palette ── */
+:root {
+  --lime:    #B5C81A;
+  --green:   #1DB320;
+  --cyan:    #00B4E0;
+  --teal:    #005F7F;
+  --white:   #ffffff;
+  --offwhite:#F4F7F2;
+  --text:    #0E2A1F;
+  --muted:   #5A7066;
+  --border:  #D6E6D6;
+  --font-en: 'Poppins', sans-serif;
+  --font-ar: 'Tajawal', sans-serif;
+  --radius:  16px;
+  --shadow:  0 4px 24px rgba(0,95,127,.09);
+}
+* { box-sizing:border-box; margin:0; padding:0; }
+body {
+  font-family: var(--font-en);
+  background: var(--offwhite);
+  color: var(--text);
+  min-height: 100vh;
+}
 
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+/* ── Top colour strip ── */
+.brand-strip {
+  display:flex; height:6px;
+}
+.brand-strip span:nth-child(1){ flex:1; background:var(--lime);  }
+.brand-strip span:nth-child(2){ flex:1; background:var(--green); }
+.brand-strip span:nth-child(3){ flex:1; background:var(--cyan);  }
+.brand-strip span:nth-child(4){ flex:1; background:var(--teal);  }
 
-  body {
-    background: var(--deep);
-    color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+/* ── Site header ── */
+.site-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 32px;
+  display:flex; align-items:center; gap:16px;
+}
+.logo-icon {
+  width:46px; height:46px;
+  background: var(--teal);
+  border-radius: 12px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:24px; flex-shrink:0;
+}
+.logo-text .company-name {
+  font-size:.68rem; font-weight:600;
+  letter-spacing:.18em; text-transform:uppercase;
+  color: var(--muted); display:block;
+}
+.logo-text .tool-name {
+  font-size:1.05rem; font-weight:700;
+  color: var(--teal); display:block; line-height:1.25;
+}
+.logo-text .tool-name-ar {
+  font-family: var(--font-ar);
+  font-size:.82rem; color: var(--muted);
+  font-weight:400; display:block;
+}
 
-  /* ── background stars ── */
-  body::before {
-    content: '';
-    position: fixed; inset: 0; z-index: 0;
-    background-image:
-      radial-gradient(1px 1px at 12% 18%, rgba(201,168,76,.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 35% 7%, rgba(201,168,76,.4) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 58% 22%, rgba(201,168,76,.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 78% 12%, rgba(201,168,76,.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 90% 34%, rgba(201,168,76,.6) 0%, transparent 100%),
-      radial-gradient(1px 1px at 5% 55%, rgba(201,168,76,.4) 0%, transparent 100%),
-      radial-gradient(1.5px 1.5px at 44% 48%, rgba(201,168,76,.3) 0%, transparent 100%),
-      radial-gradient(1px 1px at 67% 71%, rgba(201,168,76,.5) 0%, transparent 100%),
-      radial-gradient(1px 1px at 23% 82%, rgba(201,168,76,.4) 0%, transparent 100%),
-      radial-gradient(1px 1px at 88% 88%, rgba(201,168,76,.3) 0%, transparent 100%);
-    pointer-events: none;
-  }
+/* ── Main ── */
+.main {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+}
 
-  .page-wrap {
-    position: relative; z-index: 1;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 40px 20px 80px;
-  }
+/* ── Hero ── */
+.hero {
+  text-align:center;
+  padding: 48px 20px 40px;
+}
+.hero-badge {
+  display:inline-flex; align-items:center; gap:8px;
+  background: rgba(0,180,224,.10);
+  border: 1px solid rgba(0,180,224,.28);
+  border-radius:100px;
+  padding: 6px 18px;
+  font-size:.72rem; font-weight:600;
+  letter-spacing:.14em; text-transform:uppercase;
+  color: var(--cyan); margin-bottom:18px;
+}
+.hero h1 {
+  font-size: clamp(1.8rem,5vw,2.9rem);
+  font-weight:700; color: var(--teal);
+  line-height:1.15; margin-bottom:8px;
+}
+.hero-ar {
+  font-family: var(--font-ar);
+  font-size: clamp(1.05rem,3vw,1.5rem);
+  font-weight:400; color: var(--green);
+  margin-bottom:12px;
+}
+.hero-sub {
+  font-size:.95rem; color: var(--muted); font-weight:300;
+}
 
-  /* ── header ── */
-  header { text-align: center; margin-bottom: 48px; }
+/* ── Card panel ── */
+.panel {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 32px;
+  margin-bottom: 24px;
+}
+.panel-label {
+  font-size:.68rem; font-weight:600;
+  letter-spacing:.16em; text-transform:uppercase;
+  color: var(--cyan); margin-bottom:4px;
+}
+.panel-title {
+  font-size:1rem; font-weight:600;
+  color: var(--teal); margin-bottom:4px;
+}
+.panel-desc {
+  font-size:.86rem; color: var(--muted);
+  line-height:1.65; margin-bottom:20px;
+}
 
-  .crescent {
-    font-size: 56px;
-    display: block;
-    animation: sway 4s ease-in-out infinite;
-    filter: drop-shadow(0 0 18px rgba(201,168,76,.6));
-  }
-  @keyframes sway {
-    0%,100% { transform: rotate(-6deg); }
-    50% { transform: rotate(6deg); }
-  }
+/* ── Image slots ── */
+.slots-row {
+  display:grid;
+  grid-template-columns: repeat(5,1fr);
+  gap:10px;
+}
+@media(max-width:520px){ .slots-row{ grid-template-columns:repeat(3,1fr); } }
 
-  h1 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: clamp(1.4rem, 5vw, 2.4rem);
-    color: var(--gold-light);
-    letter-spacing: .08em;
-    text-shadow: 0 0 30px rgba(201,168,76,.4);
-    margin: 12px 0 6px;
-  }
-  .subtitle {
-    font-size: 1.1rem;
-    font-style: italic;
-    color: rgba(245,238,220,.6);
-    letter-spacing: .12em;
-  }
+.slot {
+  position:relative; aspect-ratio:1;
+  border:2px dashed var(--border); border-radius:10px;
+  overflow:hidden; cursor:pointer;
+  background: var(--offwhite);
+  transition:border-color .2s, background .2s;
+}
+.slot:hover { border-color:var(--cyan); background:#EAF8FD; }
+.slot.loaded { border-color:var(--green); border-style:solid; }
+.slot input[type="file"] {
+  position:absolute; inset:0; opacity:0;
+  cursor:pointer; width:100%; height:100%;
+}
+.slot-preview {
+  position:absolute; inset:0;
+  background-size:cover; background-position:center;
+}
+.slot-inner {
+  position:absolute; inset:0;
+  display:flex; flex-direction:column;
+  align-items:center; justify-content:center;
+  gap:3px; pointer-events:none;
+  transition:opacity .2s;
+}
+.slot.loaded .slot-inner { opacity:0; }
+.slot-inner .s-icon { font-size:1.4rem; }
+.slot-inner .s-num  { font-size:.65rem; font-weight:600; color:var(--muted); }
 
-  /* ── divider ── */
-  .divider {
-    display: flex; align-items: center; gap: 12px;
-    margin: 32px 0;
-    color: var(--gold);
-    font-size: .85rem; letter-spacing: .2em;
-  }
-  .divider::before, .divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
-  }
+.status-line {
+  margin-top:14px; display:flex;
+  align-items:center; gap:8px;
+  font-size:.82rem; color:var(--muted);
+}
+.pip { width:8px; height:8px; border-radius:50%; background:var(--border); flex-shrink:0; transition:background .3s; }
+.pip.ok { background:var(--green); }
 
-  /* ── input section ── */
-  .input-section {
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(201,168,76,.25);
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 40px;
-    backdrop-filter: blur(4px);
-  }
+/* ── Name input ── */
+.input-group { margin-top:4px; }
+.input-group > label {
+  display:block; font-size:.7rem; font-weight:600;
+  letter-spacing:.12em; text-transform:uppercase;
+  color:var(--muted); margin-bottom:8px;
+}
+.input-row { display:flex; gap:12px; flex-wrap:wrap; }
+input[type="text"] {
+  flex:1; min-width:200px;
+  border:2px solid var(--border); border-radius:10px;
+  padding:13px 18px;
+  font-family:var(--font-en); font-size:1rem;
+  color:var(--text); background:var(--white);
+  outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+input[type="text"]:focus {
+  border-color:var(--cyan);
+  box-shadow:0 0 0 4px rgba(0,180,224,.12);
+}
+input[type="text"]::placeholder { color:#B2C8BE; }
 
-  .input-section label {
-    display: block;
-    font-size: 1.05rem;
-    letter-spacing: .1em;
-    color: var(--gold-light);
-    margin-bottom: 12px;
-  }
+.btn-generate {
+  background:var(--teal); border:none; border-radius:10px;
+  padding:13px 26px; color:#fff;
+  font-family:var(--font-en); font-size:.88rem; font-weight:600;
+  letter-spacing:.03em; cursor:pointer; white-space:nowrap;
+  display:flex; align-items:center; gap:8px;
+  transition:background .2s, transform .15s, box-shadow .2s;
+}
+.btn-generate:hover {
+  background:#004d68; transform:translateY(-1px);
+  box-shadow:0 6px 20px rgba(0,95,127,.24);
+}
+.btn-generate:active { transform:none; }
 
-  .name-row {
-    display: flex; gap: 12px; flex-wrap: wrap;
-  }
+/* ── Results ── */
+.results-bar {
+  display:flex; align-items:center;
+  justify-content:space-between; flex-wrap:wrap;
+  gap:12px; margin-bottom:18px;
+}
+.results-bar h2 {
+  font-size:.95rem; font-weight:700;
+  color:var(--teal);
+}
+.results-sub { font-size:.8rem; color:var(--muted); font-weight:400; }
 
-  input[type="text"] {
-    flex: 1; min-width: 200px;
-    background: rgba(255,255,255,.06);
-    border: 1px solid rgba(201,168,76,.4);
-    border-radius: 8px;
-    padding: 14px 20px;
-    color: var(--cream);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1.2rem;
-    outline: none;
-    transition: border-color .25s, box-shadow .25s;
-  }
-  input[type="text"]::placeholder { color: rgba(245,238,220,.3); }
-  input[type="text"]:focus {
-    border-color: var(--gold);
-    box-shadow: 0 0 0 3px rgba(201,168,76,.15);
-  }
+.btn-dl-all {
+  border:2px solid var(--teal); border-radius:10px;
+  padding:9px 20px; background:transparent; color:var(--teal);
+  font-family:var(--font-en); font-size:.84rem; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:6px;
+  transition:background .2s, color .2s;
+}
+.btn-dl-all:hover { background:var(--teal); color:#fff; }
 
-  .btn-generate {
-    background: linear-gradient(135deg, var(--gold), #a07c30);
-    border: none;
-    border-radius: 8px;
-    padding: 14px 28px;
-    color: var(--deep);
-    font-family: 'Cinzel Decorative', serif;
-    font-size: .85rem;
-    letter-spacing: .08em;
-    cursor: pointer;
-    transition: transform .18s, box-shadow .18s;
-    white-space: nowrap;
-  }
-  .btn-generate:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(201,168,76,.35);
-  }
-  .btn-generate:active { transform: translateY(0); }
+.cards-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(265px,1fr));
+  gap:18px;
+}
+.card-item {
+  background:var(--white); border:1px solid var(--border);
+  border-radius:var(--radius); overflow:hidden;
+  box-shadow:var(--shadow);
+  transition:transform .22s, box-shadow .22s;
+}
+.card-item:hover {
+  transform:translateY(-3px);
+  box-shadow:0 10px 32px rgba(0,95,127,.14);
+}
+.card-item canvas { display:block; width:100%; height:auto; }
+.card-foot {
+  display:flex; align-items:center;
+  justify-content:space-between;
+  padding:11px 16px;
+  border-top:1px solid var(--border);
+}
+.card-lbl { font-size:.78rem; font-weight:600; color:var(--muted); }
+.btn-dl-one {
+  border:none; border-radius:8px;
+  padding:7px 15px;
+  background:var(--cyan); color:#fff;
+  font-family:var(--font-en); font-size:.78rem; font-weight:600;
+  cursor:pointer; display:flex; align-items:center; gap:4px;
+  transition:background .15s, transform .12s;
+}
+.btn-dl-one:hover { background:#009dc4; transform:translateY(-1px); }
 
-  /* ── cards grid ── */
-  .cards-header {
-    display: flex; align-items: center; justify-content: space-between;
-    flex-wrap: wrap; gap: 12px;
-    margin-bottom: 24px;
-  }
-  .cards-header h2 {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: 1rem;
-    color: var(--gold-light);
-    letter-spacing: .1em;
-  }
-
-  .btn-download-all {
-    background: transparent;
-    border: 1px solid var(--gold);
-    border-radius: 8px;
-    padding: 10px 20px;
-    color: var(--gold);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: 1rem;
-    letter-spacing: .08em;
-    cursor: pointer;
-    transition: background .2s, color .2s;
-  }
-  .btn-download-all:hover {
-    background: var(--gold);
-    color: var(--deep);
-  }
-
-  .cards-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-    gap: 24px;
-  }
-
-  .card-item {
-    background: rgba(255,255,255,.04);
-    border: 1px solid rgba(201,168,76,.2);
-    border-radius: 14px;
-    overflow: hidden;
-    transition: transform .25s, border-color .25s;
-  }
-  .card-item:hover {
-    transform: translateY(-4px);
-    border-color: rgba(201,168,76,.6);
-  }
-
-  .card-item canvas {
-    display: block;
-    width: 100%;
-    height: auto;
-    cursor: pointer;
-  }
-
-  .card-footer {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 12px 16px;
-    border-top: 1px solid rgba(201,168,76,.1);
-  }
-  .card-name-label {
-    font-size: .9rem;
-    color: rgba(245,238,220,.55);
-    font-style: italic;
-  }
-
-  .btn-dl {
-    background: linear-gradient(135deg, var(--gold), #a07c30);
-    border: none;
-    border-radius: 6px;
-    padding: 8px 16px;
-    color: var(--deep);
-    font-family: 'Cormorant Garamond', serif;
-    font-size: .95rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform .15s, box-shadow .15s;
-  }
-  .btn-dl:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 4px 14px rgba(201,168,76,.3);
-  }
-
-  /* ── image loader section ── */
-  .image-loader {
-    background: rgba(201,168,76,.06);
-    border: 1px dashed rgba(201,168,76,.4);
-    border-radius: 16px;
-    padding: 28px 32px;
-    margin-bottom: 28px;
-  }
-  .image-loader-title {
-    font-family: 'Cinzel Decorative', serif;
-    font-size: .85rem;
-    color: var(--gold-light);
-    letter-spacing: .1em;
-    margin-bottom: 6px;
-  }
-  .image-loader-desc {
-    font-size: .95rem;
-    font-style: italic;
-    color: rgba(245,238,220,.5);
-    margin-bottom: 18px;
-    line-height: 1.5;
-  }
-  .image-loader-desc strong { color: rgba(245,238,220,.8); font-style: normal; }
-
-  .image-slots {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-    gap: 12px;
-  }
-  .image-slot {
-    position: relative;
-    aspect-ratio: 1;
-    border: 1.5px dashed rgba(201,168,76,.35);
-    border-radius: 10px;
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color .2s;
-    background: rgba(255,255,255,.03);
-  }
-  .image-slot:hover { border-color: var(--gold); }
-  .image-slot input[type="file"] {
-    position: absolute; inset: 0;
-    opacity: 0; cursor: pointer; width: 100%; height: 100%;
-    min-width: unset;
-  }
-  .image-slot .slot-preview {
-    position: absolute; inset: 0;
-    background-size: cover;
-    background-position: center;
-  }
-  .image-slot .slot-label {
-    position: absolute; inset: 0;
-    display: flex; flex-direction: column;
-    align-items: center; justify-content: center;
-    gap: 6px;
-    color: rgba(201,168,76,.6);
-    font-size: .8rem;
-    letter-spacing: .08em;
-    pointer-events: none;
-    transition: opacity .2s;
-  }
-  .image-slot .slot-label .slot-icon { font-size: 1.6rem; }
-  .image-slot.loaded .slot-label { opacity: 0; }
-  .image-slot.loaded { border-color: var(--gold); border-style: solid; }
-
-  .loader-status {
-    margin-top: 14px;
-    font-size: .9rem;
-    font-style: italic;
-    color: var(--gold);
-    min-height: 20px;
-  }
-
-  /* ── placeholder state ── */
-  .placeholder-msg {
-    text-align: center;
-    padding: 60px 20px;
-    color: rgba(245,238,220,.35);
-    font-style: italic;
-    font-size: 1.15rem;
-    letter-spacing: .06em;
-    grid-column: 1 / -1;
-  }
-
-  /* ── footer ── */
-  footer {
-    text-align: center;
-    margin-top: 64px;
-    font-size: .85rem;
-    color: rgba(245,238,220,.25);
-    letter-spacing: .1em;
-  }
+/* ── Placeholder ── */
+.placeholder-wrap {
+  grid-column:1/-1; text-align:center;
+  padding:56px 24px;
+}
+.placeholder-wrap .ph-icon { font-size:2.8rem; margin-bottom:12px; }
+.placeholder-wrap p { font-size:.9rem; color:var(--muted); line-height:1.75; }
 </style>
 </head>
 <body>
-<div class="page-wrap">
 
-  <header>
-    <span class="crescent">☽</span>
-    <h1>Ramadan Mubarak</h1>
-    <p class="subtitle">Personalised Card Generator</p>
-  </header>
+<div class="brand-strip">
+  <span></span><span></span><span></span><span></span>
+</div>
 
-  <!-- ── Image Loader: only shown when running locally ── -->
-  <div class="image-loader" id="imageLoader" style="display:none">
-    <div class="image-loader-title">🖼 Load Your 5 Card Images</div>
-    <p class="image-loader-desc">
-      Your browser blocks local files for security when you open HTML by double-clicking.<br>
-      Click each slot below to load your images — <strong>you only need to do this once per session.</strong><br>
-      On Azure this section disappears automatically.
-    </p>
-    <div class="image-slots" id="imageSlots"></div>
-    <div class="loader-status" id="loaderStatus">0 / 5 images loaded  (or generate now to preview with built-in designs)</div>
+<header class="site-header">
+  <div class="logo-icon">🌙</div>
+  <div class="logo-text">
+    <span class="company-name">Your Company</span>
+    <span class="tool-name">Ramadan Card Generator</span>
+    <span class="tool-name-ar">مولد بطاقات رمضان</span>
+  </div>
+</header>
+
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-badge">✦ Ramadan 2025</div>
+    <h1>Send Personalised Ramadan Greetings</h1>
+    <div class="hero-ar">أرسل تهاني رمضان المخصصة</div>
+    <p class="hero-sub">Enter your name, generate 5 card designs, and download instantly.</p>
   </div>
 
-  <div class="input-section">
-    <label for="nameInput">Enter the recipient's name</label>
-    <div class="name-row">
-      <input type="text" id="nameInput" placeholder="e.g. Ahmed Al-Rashidi" maxlength="40" />
-      <button class="btn-generate" onclick="generateCards()">✦ Generate Cards</button>
+  <!-- Image loader — appears only when opening locally (not on Azure) -->
+  <div class="panel" id="imageLoader" style="display:none">
+    <div class="panel-label">Step 1 — Load Images</div>
+    <div class="panel-title">Load Your 5 Card Images</div>
+    <p class="panel-desc">
+      Browsers block local files when you open HTML by double-clicking.
+      Click each slot to load your card images.
+      <strong>This step is not required on Azure</strong> — images load from the
+      <code>cards/</code> folder automatically.
+    </p>
+    <div class="slots-row" id="imageSlots"></div>
+    <div class="status-line">
+      <div class="pip" id="statusPip"></div>
+      <span id="loaderStatus">0 / 5 loaded — or generate now to preview built-in designs</span>
     </div>
   </div>
 
-  <div class="divider">✦ YOUR CARDS ✦</div>
-
-  <div class="cards-header" id="cardsHeader" style="display:none">
-    <h2>5 Designs Ready</h2>
-    <button class="btn-download-all" onclick="downloadAll()">⬇ Download All</button>
+  <!-- Name input -->
+  <div class="panel">
+    <div class="panel-label" id="stepLabel">Step 1 — Enter Name</div>
+    <div class="input-group">
+      <label for="nameInput">Full Name &nbsp;/&nbsp; الاسم الكامل</label>
+      <div class="input-row">
+        <input type="text" id="nameInput"
+          placeholder="e.g. Ahmed Al-Rashidi / أحمد الراشدي"
+          maxlength="42" autocomplete="off"/>
+        <button class="btn-generate" onclick="generateCards()">
+          ✦ &nbsp;Generate Cards
+        </button>
+      </div>
+    </div>
   </div>
 
-  <div class="cards-grid" id="cardsGrid">
-    <p class="placeholder-msg" id="placeholderMsg">Enter a name above and press <em>Generate Cards</em> to create personalised Ramadan cards ✦</p>
+  <!-- Results -->
+  <div id="resultsSection" style="display:none">
+    <div class="results-bar">
+      <h2>Your Cards &nbsp;<span class="results-sub" id="resultsFor"></span></h2>
+      <button class="btn-dl-all" onclick="downloadAll()">⬇ Download All</button>
+    </div>
+    <div class="cards-grid" id="cardsGrid"></div>
   </div>
 
-  <footer>
-    <p>Ramadan Kareem &nbsp;•&nbsp; رمضان كريم</p>
-  </footer>
-</div>
+  <!-- Placeholder (before first generation) -->
+  <div class="cards-grid" id="placeholder">
+    <div class="placeholder-wrap">
+      <div class="ph-icon">🎴</div>
+      <p>Enter a name above and click <strong>Generate Cards</strong><br>
+      to create personalised Ramadan greetings.</p>
+    </div>
+  </div>
+
+</main>
 
 <script>
-// ─────────────────────────────────────────
-// CONFIGURATION
-// Set USE_IMAGES = true to use your own card images.
-// On Azure: images are loaded from cards/card1.jpg etc.
-// Locally: use the file picker that appears on the page.
-// ─────────────────────────────────────────
+// ════════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════════
 const USE_IMAGES = true;
 const IMAGE_PATHS = [
-  'cards/card1.jpg',
-  'cards/card2.jpg',
-  'cards/card3.jpg',
-  'cards/card4.jpg',
-  'cards/card5.jpg',
+  'cards/card1.jpg','cards/card2.jpg','cards/card3.jpg',
+  'cards/card4.jpg','cards/card5.jpg',
 ];
 
-// Stores locally-picked image data URLs (for file:// mode)
-const localImageData = [null, null, null, null, null];
+// Brand colours
+const B = { lime:'#B5C81A', green:'#1DB320', cyan:'#00B4E0', teal:'#005F7F', white:'#ffffff' };
 
-// Detect if running locally (file:// protocol)
+// Built-in designs (fallback / USE_IMAGES=false)
+const DESIGNS = [
+  { label:'Design 1', bg:['#003F54','#005F7F'], accent:B.cyan,  ar:'رمضان كريم',        en:'Ramadan Mubarak',      pat:'geo'  },
+  { label:'Design 2', bg:['#0A3A0A','#1A6A1A'], accent:B.lime,  ar:'رمضان مبارك',        en:'Blessed Ramadan',      pat:'arch' },
+  { label:'Design 3', bg:['#1A3A00','#3A6A00'], accent:B.green, ar:'كل عام وأنتم بخير', en:'May Peace Be Upon You', pat:'star' },
+  { label:'Design 4', bg:['#003F54','#00647F'], accent:B.lime,  ar:'رمضان كريم',        en:'A Blessed Ramadan',    pat:'geo'  },
+  { label:'Design 5', bg:['#0A2A3A','#005F7F'], accent:B.cyan,  ar:'رمضان مبارك',        en:'Ramadan Kareem',       pat:'arch' },
+];
+
+const W=1080, H=1080;
 const IS_LOCAL = location.protocol === 'file:';
+const localImgs = Array(5).fill(null);
+let canvases = [];
 
-// ── Setup image loader UI if running locally ──
+// ════════════════════════════════════════
+// Init
+// ════════════════════════════════════════
 window.addEventListener('DOMContentLoaded', () => {
   if (USE_IMAGES && IS_LOCAL) {
     document.getElementById('imageLoader').style.display = 'block';
-    buildImageSlots();
+    document.getElementById('stepLabel').textContent = 'Step 2 — Enter Name';
+    buildSlots();
   }
 });
 
-function buildImageSlots() {
-  const container = document.getElementById('imageSlots');
-  for (let i = 0; i < 5; i++) {
+// ════════════════════════════════════════
+// Image slot loader
+// ════════════════════════════════════════
+function buildSlots() {
+  const wrap = document.getElementById('imageSlots');
+  for (let i=0;i<5;i++) {
     const slot = document.createElement('div');
-    slot.className = 'image-slot';
-    slot.id = `slot-${i}`;
+    slot.className='slot'; slot.id=`slot-${i}`;
 
     const preview = document.createElement('div');
-    preview.className = 'slot-preview';
-    preview.id = `preview-${i}`;
+    preview.className='slot-preview'; preview.id=`prev-${i}`;
 
-    const label = document.createElement('div');
-    label.className = 'slot-label';
-    label.innerHTML = `<span class="slot-icon">🌙</span><span>Card ${i + 1}</span>`;
+    const inner = document.createElement('div');
+    inner.className='slot-inner';
+    inner.innerHTML=`<span class="s-icon">🖼</span><span class="s-num">Card ${i+1}</span>`;
 
-    const fileInput = document.createElement('input');
-    fileInput.type = 'file';
-    fileInput.accept = 'image/*';
-    fileInput.addEventListener('change', (e) => handleSlotFile(e, i));
+    const inp = document.createElement('input');
+    inp.type='file'; inp.accept='image/*';
+    inp.addEventListener('change', e => loadSlot(e,i));
 
-    slot.appendChild(preview);
-    slot.appendChild(label);
-    slot.appendChild(fileInput);
-    container.appendChild(slot);
+    slot.append(preview,inner,inp);
+    wrap.appendChild(slot);
   }
 }
 
-function handleSlotFile(e, index) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    localImageData[index] = ev.target.result;
-    // show preview
-    document.getElementById(`preview-${index}`).style.backgroundImage = `url(${ev.target.result})`;
-    document.getElementById(`slot-${index}`).classList.add('loaded');
-    // update status
-    const loaded = localImageData.filter(Boolean).length;
-    document.getElementById('loaderStatus').textContent =
-      loaded === 5
-        ? '✅ All 5 images loaded — ready to generate!'
-        : `${loaded} / 5 images loaded  (or generate now to preview with built-in designs)`;
+function loadSlot(e,i) {
+  const file=e.target.files[0]; if(!file) return;
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    localImgs[i]=ev.target.result;
+    document.getElementById(`prev-${i}`).style.backgroundImage=`url(${ev.target.result})`;
+    document.getElementById(`slot-${i}`).classList.add('loaded');
+    const n=localImgs.filter(Boolean).length;
+    document.getElementById('statusPip').classList.toggle('ok', n===5);
+    document.getElementById('loaderStatus').textContent = n===5
+      ? '✅ All 5 images ready — enter a name and generate!'
+      : `${n} / 5 images loaded`;
   };
   reader.readAsDataURL(file);
 }
 
-// Card canvas size
-const W = 1080, H = 1080;
-
-// ─────────────────────────────────────────
-// Card design definitions (used when USE_IMAGES = false)
-// ─────────────────────────────────────────
-const DESIGNS = [
-  {
-    label: 'Midnight Blue',
-    bg: ['#0a1628', '#1a3a5c'],
-    accent: '#c9a84c',
-    arabicMsg: 'رمضان كريم',
-    engMsg: 'Ramadan Mubarak',
-    pattern: 'geo',
-  },
-  {
-    label: 'Desert Gold',
-    bg: ['#2c1810', '#7b4f2a'],
-    accent: '#e8c97a',
-    arabicMsg: 'رمضان مبارك',
-    engMsg: 'Blessed Ramadan',
-    pattern: 'arch',
-  },
-  {
-    label: 'Emerald Night',
-    bg: ['#0a2318', '#0d4a2f'],
-    accent: '#c9a84c',
-    arabicMsg: 'كل عام وأنتم بخير',
-    engMsg: 'May Peace Be Upon You',
-    pattern: 'star',
-  },
-  {
-    label: 'Royal Plum',
-    bg: ['#1a0a2e', '#3d1a6b'],
-    accent: '#e8c97a',
-    arabicMsg: 'رمضان كريم',
-    engMsg: 'A Blessed Ramadan',
-    pattern: 'geo',
-  },
-  {
-    label: 'Rose Dusk',
-    bg: ['#2e0a1a', '#7b1a3f'],
-    accent: '#e8c97a',
-    arabicMsg: 'رمضان مبارك',
-    engMsg: 'Ramadan Kareem',
-    pattern: 'arch',
-  },
-];
-
-// ─────────────────────────────────────────
-// Main generator
-// ─────────────────────────────────────────
-let canvases = [];
-
+// ════════════════════════════════════════
+// Generate
+// ════════════════════════════════════════
 async function generateCards() {
   const name = document.getElementById('nameInput').value.trim();
-  if (!name) {
-    document.getElementById('nameInput').focus();
-    return;
-  }
+  if (!name) { document.getElementById('nameInput').focus(); return; }
 
-  // If running locally, warn if images not fully loaded but still continue
+  document.getElementById('placeholder').style.display='none';
+  document.getElementById('resultsSection').style.display='block';
+  document.getElementById('resultsFor').textContent=`for "${name}"`;
 
-  const grid = document.getElementById('cardsGrid');
-  const header = document.getElementById('cardsHeader');
+  const grid=document.getElementById('cardsGrid');
+  grid.innerHTML=''; canvases=[];
 
-  grid.innerHTML = '';
-  canvases = [];
-  header.style.display = 'flex';
-
-  for (let i = 0; i < 5; i++) {
-    const canvas = document.createElement('canvas');
-    canvas.width = W;
-    canvas.height = H;
+  for (let i=0;i<5;i++) {
+    const canvas=document.createElement('canvas');
+    canvas.width=W; canvas.height=H;
     canvases.push(canvas);
 
-    const item = document.createElement('div');
-    item.className = 'card-item';
+    const item=document.createElement('div'); item.className='card-item';
+    const foot=document.createElement('div'); foot.className='card-foot';
+    const lbl=document.createElement('span'); lbl.className='card-lbl'; lbl.textContent=DESIGNS[i].label;
+    const dl=document.createElement('button'); dl.className='btn-dl-one';
+    dl.innerHTML='⬇ Download'; dl.onclick=()=>downloadCard(i,name);
+    foot.append(lbl,dl); item.append(canvas,foot); grid.appendChild(item);
 
-    const footer = document.createElement('div');
-    footer.className = 'card-footer';
-    footer.innerHTML = `<span class="card-name-label">${DESIGNS[i].label}</span>`;
-
-    const dlBtn = document.createElement('button');
-    dlBtn.className = 'btn-dl';
-    dlBtn.textContent = '⬇ Download';
-    dlBtn.onclick = () => downloadCard(i, name);
-    footer.appendChild(dlBtn);
-
-    item.appendChild(canvas);
-    item.appendChild(footer);
-    grid.appendChild(item);
-
-    if (USE_IMAGES && (!IS_LOCAL || localImageData[i])) {
-      // Azure: load from cards/ folder. Local: use picked file if available
-      const src = (IS_LOCAL && localImageData[i]) ? localImageData[i] : IMAGE_PATHS[i];
+    if (USE_IMAGES) {
+      const src = (IS_LOCAL && localImgs[i]) ? localImgs[i] : IMAGE_PATHS[i];
       await drawWithImage(canvas, src, name, DESIGNS[i]);
     } else {
-      // Fallback: draw generated design (always works, no files needed)
       drawDesign(canvas, DESIGNS[i], name);
     }
   }
-
-  // Scroll to cards
-  grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.getElementById('resultsSection').scrollIntoView({behavior:'smooth'});
 }
 
-// ─────────────────────────────────────────
-// Draw a fully generated design
-// ─────────────────────────────────────────
-function drawDesign(canvas, design, name) {
-  const ctx = canvas.getContext('2d');
-  const { bg, accent, arabicMsg, engMsg, pattern } = design;
+// ════════════════════════════════════════
+// Canvas: built-in design
+// ════════════════════════════════════════
+function drawDesign(canvas, d, name) {
+  const ctx=canvas.getContext('2d');
+  const bg=ctx.createLinearGradient(0,0,W,H);
+  bg.addColorStop(0,d.bg[0]); bg.addColorStop(1,d.bg[1]);
+  ctx.fillStyle=bg; ctx.fillRect(0,0,W,H);
 
-  // Background gradient
-  const grad = ctx.createLinearGradient(0, 0, W, H);
-  grad.addColorStop(0, bg[0]);
-  grad.addColorStop(1, bg[1]);
-  ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, W, H);
+  ctx.globalAlpha=.065;
+  if(d.pat==='geo')  drawGeo(ctx,d.accent);
+  if(d.pat==='arch') drawArch(ctx,d.accent);
+  if(d.pat==='star') drawStarPat(ctx,d.accent);
+  ctx.globalAlpha=1;
 
-  // Decorative pattern
-  ctx.globalAlpha = 0.07;
-  if (pattern === 'geo') drawGeoPattern(ctx, accent);
-  if (pattern === 'arch') drawArchPattern(ctx, accent);
-  if (pattern === 'star') drawStarPattern(ctx, accent);
-  ctx.globalAlpha = 1;
+  ctx.strokeStyle=d.accent; ctx.lineWidth=5; ctx.strokeRect(32,32,W-64,H-64);
+  ctx.globalAlpha=.3; ctx.lineWidth=1; ctx.strokeRect(52,52,W-104,H-104); ctx.globalAlpha=1;
+  corners(ctx,d.accent);
+  drawCrescent(ctx,W/2,200,74,d.accent,d.bg[1]);
 
-  // Outer border
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 6;
-  ctx.strokeRect(30, 30, W - 60, H - 60);
+  ctx.textAlign='center'; ctx.textBaseline='middle';
 
-  // Inner border
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 1.5;
-  ctx.globalAlpha = 0.5;
-  ctx.strokeRect(48, 48, W - 96, H - 96);
-  ctx.globalAlpha = 1;
+  ctx.fillStyle=d.accent;
+  ctx.font=`bold 68px 'Tajawal',sans-serif`;
+  ctx.fillText(d.ar, W/2, 368);
 
-  // Corner ornaments
-  drawCornerOrnaments(ctx, accent);
+  ctx.fillStyle='rgba(255,255,255,.75)';
+  ctx.font=`400 36px 'Poppins',sans-serif`;
+  ctx.fillText(d.en, W/2, 445);
 
-  // Crescent moon
-  drawCrescent(ctx, W / 2, 180, 70, accent);
+  ctx.strokeStyle=d.accent; ctx.lineWidth=1; ctx.globalAlpha=.4;
+  ctx.beginPath(); ctx.moveTo(200,505); ctx.lineTo(W-200,505); ctx.stroke();
+  ctx.globalAlpha=1;
 
-  // Star above
-  drawStar(ctx, W / 2, 100, 18, 5, accent);
+  ctx.fillStyle='rgba(255,255,255,.5)';
+  ctx.font=`300 28px 'Poppins',sans-serif`;
+  ctx.fillText('Wishing you and your family', W/2, 562);
 
-  // Arabic message
-  ctx.fillStyle = accent;
-  ctx.font = `bold 72px 'Scheherazade New', 'Traditional Arabic', serif`;
-  ctx.textAlign = 'center';
-  ctx.textBaseline = 'middle';
-  ctx.fillText(arabicMsg, W / 2, 340);
+  // Auto-shrink name to fit
+  let fs=72; ctx.font=`700 ${fs}px 'Poppins',sans-serif`;
+  while(ctx.measureText(name).width>W-200 && fs>34){ fs-=4; ctx.font=`700 ${fs}px 'Poppins',sans-serif`; }
+  ctx.fillStyle=d.accent;
+  ctx.fillText(name, W/2, 655);
 
-  // English message
-  ctx.fillStyle = '#f5eedc';
-  ctx.globalAlpha = 0.85;
-  ctx.font = `italic 38px 'Cormorant Garamond', serif`;
-  ctx.fillText(engMsg, W / 2, 420);
-  ctx.globalAlpha = 1;
+  ctx.fillStyle='rgba(255,255,255,.4)';
+  ctx.font=`300 26px 'Poppins',sans-serif`;
+  ctx.fillText('a blessed and joyful Ramadan', W/2, 728);
 
-  // Horizontal line
-  ctx.strokeStyle = accent;
-  ctx.lineWidth = 1;
-  ctx.globalAlpha = 0.5;
-  ctx.beginPath();
-  ctx.moveTo(180, 480); ctx.lineTo(W - 180, 480);
-  ctx.stroke();
-  ctx.globalAlpha = 1;
-
-  // Name greeting
-  ctx.fillStyle = '#f5eedc';
-  ctx.font = `300 32px 'Cormorant Garamond', serif`;
-  ctx.fillText('Wishing you and your family', W / 2, 540);
-
-  // Name
-  ctx.fillStyle = accent;
-  ctx.font = `600 68px 'Cormorant Garamond', serif`;
-  ctx.fillText(name, W / 2, 630);
-
-  // Sub line
-  ctx.fillStyle = '#f5eedc';
-  ctx.font = `italic 300 30px 'Cormorant Garamond', serif`;
-  ctx.globalAlpha = 0.75;
-  ctx.fillText('a blessed and joyful Ramadan', W / 2, 700);
-  ctx.globalAlpha = 1;
-
-  // Bottom ornament
-  drawBottomOrnament(ctx, accent, W / 2, 820);
-
-  // Stars scatter
-  scatterStars(ctx, accent);
+  brandBar(ctx);
 }
 
-// ─────────────────────────────────────────
-// Draw with a real image + name overlay
-// ─────────────────────────────────────────
-function drawWithImage(canvas, src, name, design) {
-  return new Promise((resolve) => {
-    const ctx = canvas.getContext('2d');
-    const img = new Image();
-    img.crossOrigin = 'anonymous';
-    img.onload = () => {
-      ctx.drawImage(img, 0, 0, W, H);
+// ════════════════════════════════════════
+// Canvas: real image + overlay
+// ════════════════════════════════════════
+function drawWithImage(canvas, src, name, d) {
+  return new Promise(res=>{
+    const ctx=canvas.getContext('2d');
+    const img=new Image(); img.crossOrigin='anonymous';
+    img.onload=()=>{
+      const scale=Math.max(W/img.width,H/img.height);
+      const sw=img.width*scale, sh=img.height*scale;
+      ctx.drawImage(img,(W-sw)/2,(H-sh)/2,sw,sh);
 
-      // Semi-transparent overlay for readability
-      const grad = ctx.createLinearGradient(0, H * 0.4, 0, H);
-      grad.addColorStop(0, 'rgba(0,0,0,0)');
-      grad.addColorStop(1, 'rgba(0,0,0,0.7)');
-      ctx.fillStyle = grad;
-      ctx.fillRect(0, 0, W, H);
+      const ov=ctx.createLinearGradient(0,H*.35,0,H);
+      ov.addColorStop(0,'rgba(0,20,15,0)');
+      ov.addColorStop(.45,'rgba(0,20,15,.6)');
+      ov.addColorStop(1,'rgba(0,20,15,.87)');
+      ctx.fillStyle=ov; ctx.fillRect(0,0,W,H);
 
-      // Name
-      ctx.fillStyle = design.accent;
-      ctx.font = `600 72px 'Cormorant Garamond', serif`;
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(name, W / 2, H * 0.72);
+      ctx.textAlign='center'; ctx.textBaseline='middle';
 
-      ctx.fillStyle = '#f5eedc';
-      ctx.font = `italic 300 36px 'Cormorant Garamond', serif`;
-      ctx.globalAlpha = 0.85;
-      ctx.fillText('رمضان كريم  •  Ramadan Mubarak', W / 2, H * 0.82);
-      ctx.globalAlpha = 1;
+      ctx.fillStyle=d.accent;
+      ctx.font=`bold 56px 'Tajawal',sans-serif`;
+      ctx.fillText(d.ar, W/2, H*.60);
 
-      resolve();
+      let fs=72; ctx.font=`700 ${fs}px 'Poppins',sans-serif`;
+      while(ctx.measureText(name).width>W-160&&fs>34){fs-=4;ctx.font=`700 ${fs}px 'Poppins',sans-serif`;}
+      ctx.fillStyle=B.white;
+      ctx.fillText(name, W/2, H*.725);
+
+      ctx.fillStyle='rgba(255,255,255,.62)';
+      ctx.font=`400 30px 'Poppins',sans-serif`;
+      ctx.fillText(d.en, W/2, H*.81);
+
+      brandBar(ctx); res();
     };
-    img.onerror = () => {
-      // fallback to generated design if image fails to load
-      drawDesign(canvas, design, name);
-      resolve();
-    };
-    img.src = src;
+    img.onerror=()=>{ drawDesign(canvas,d,name); res(); };
+    img.src=src;
   });
 }
 
-// ─────────────────────────────────────────
-// Pattern helpers
-// ─────────────────────────────────────────
-function drawGeoPattern(ctx, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  const size = 80;
-  for (let x = 0; x < W + size; x += size) {
-    for (let y = 0; y < H + size; y += size) {
-      ctx.beginPath();
-      ctx.moveTo(x, y - size / 2);
-      ctx.lineTo(x + size / 2, y);
-      ctx.lineTo(x, y + size / 2);
-      ctx.lineTo(x - size / 2, y);
-      ctx.closePath();
-      ctx.stroke();
-    }
+// ════════════════════════════════════════
+// Drawing helpers
+// ════════════════════════════════════════
+function brandBar(ctx) {
+  const bh=18, by=H-bh, sw=W/4;
+  [B.lime,B.green,B.cyan,B.teal].forEach((c,i)=>{
+    ctx.globalAlpha=1; ctx.fillStyle=c; ctx.fillRect(i*sw,by,sw,bh);
+  });
+}
+function corners(ctx,col) {
+  ctx.strokeStyle=col; ctx.lineWidth=3;
+  [[60,60,1,1],[W-60,60,-1,1],[60,H-60,1,-1],[W-60,H-60,-1,-1]].forEach(([x,y,dx,dy])=>{
+    ctx.beginPath(); ctx.moveTo(x+dx*52,y); ctx.lineTo(x,y); ctx.lineTo(x,y+dy*52); ctx.stroke();
+  });
+}
+function drawCrescent(ctx,cx,cy,r,fill,cover) {
+  ctx.fillStyle=fill; ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle=cover; ctx.beginPath(); ctx.arc(cx+r*.38,cy-r*.08,r*.80,0,Math.PI*2); ctx.fill();
+  const g=ctx.createRadialGradient(cx,cy,r*.4,cx,cy,r*2.2);
+  g.addColorStop(0,fill+'44'); g.addColorStop(1,'transparent');
+  ctx.fillStyle=g; ctx.beginPath(); ctx.arc(cx,cy,r*2.2,0,Math.PI*2); ctx.fill();
+}
+function drawGeo(ctx,col) {
+  ctx.strokeStyle=col; ctx.lineWidth=1;
+  for(let x=0;x<W+80;x+=80) for(let y=0;y<H+80;y+=80){
+    ctx.beginPath(); ctx.moveTo(x,y-40); ctx.lineTo(x+40,y); ctx.lineTo(x,y+40); ctx.lineTo(x-40,y); ctx.closePath(); ctx.stroke();
   }
 }
-
-function drawArchPattern(ctx, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1;
-  for (let x = 0; x < W; x += 90) {
-    for (let y = 0; y < H; y += 90) {
-      ctx.beginPath();
-      ctx.arc(x + 45, y + 45, 38, 0, Math.PI * 2);
-      ctx.stroke();
-    }
+function drawArch(ctx,col) {
+  ctx.strokeStyle=col; ctx.lineWidth=1;
+  for(let x=0;x<W;x+=90) for(let y=0;y<H;y+=90){
+    ctx.beginPath(); ctx.arc(x+45,y+45,38,0,Math.PI*2); ctx.stroke();
   }
 }
-
-function drawStarPattern(ctx, color) {
-  ctx.fillStyle = color;
-  for (let x = 60; x < W; x += 120) {
-    for (let y = 60; y < H; y += 120) {
-      drawStar(ctx, x, y, 12, 8, color, true);
-    }
-  }
+function drawStarPat(ctx,col) {
+  for(let x=60;x<W;x+=120) for(let y=60;y<H;y+=120) drawStar(ctx,x,y,10,6,col,true);
 }
-
-function drawStar(ctx, cx, cy, r, points, color, fill = false) {
-  const innerR = r * 0.4;
+function drawStar(ctx,cx,cy,r,pts,col,fill) {
   ctx.beginPath();
-  for (let i = 0; i < points * 2; i++) {
-    const angle = (i * Math.PI) / points - Math.PI / 2;
-    const rad = i % 2 === 0 ? r : innerR;
-    const x = cx + Math.cos(angle) * rad;
-    const y = cy + Math.sin(angle) * rad;
-    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  for(let i=0;i<pts*2;i++){
+    const a=(i*Math.PI)/pts-Math.PI/2, rad=i%2===0?r:r*.4;
+    i===0?ctx.moveTo(cx+Math.cos(a)*rad,cy+Math.sin(a)*rad):ctx.lineTo(cx+Math.cos(a)*rad,cy+Math.sin(a)*rad);
   }
   ctx.closePath();
-  if (fill) {
-    ctx.fillStyle = color;
-    ctx.fill();
-  } else {
-    ctx.strokeStyle = color;
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
+  if(fill){ctx.fillStyle=col;ctx.fill();}else{ctx.strokeStyle=col;ctx.lineWidth=1.5;ctx.stroke();}
 }
 
-function drawCrescent(ctx, cx, cy, r, color) {
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#1a2d45'; // cover to create crescent
-  ctx.beginPath();
-  ctx.arc(cx + r * 0.4, cy - r * 0.1, r * 0.82, 0, Math.PI * 2);
-  ctx.fill();
-
-  // glow
-  const glow = ctx.createRadialGradient(cx, cy, r * 0.5, cx, cy, r * 2);
-  glow.addColorStop(0, color + '40');
-  glow.addColorStop(1, 'transparent');
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
-  ctx.fill();
-}
-
-function drawCornerOrnaments(ctx, color) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 2;
-  const c = 60, s = 60;
-  const corners = [
-    [c, c, 1, 1],
-    [W - c, c, -1, 1],
-    [c, H - c, 1, -1],
-    [W - c, H - c, -1, -1],
-  ];
-  for (const [x, y, dx, dy] of corners) {
-    ctx.beginPath();
-    ctx.moveTo(x, y);
-    ctx.lineTo(x + dx * s, y);
-    ctx.moveTo(x, y);
-    ctx.lineTo(x, y + dy * s);
-    ctx.moveTo(x + dx * 10, y + dy * 10);
-    ctx.arc(x + dx * 10, y + dy * 10, 8, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-}
-
-function drawBottomOrnament(ctx, color, cx, cy) {
-  ctx.strokeStyle = color;
-  ctx.lineWidth = 1.5;
-  ctx.globalAlpha = 0.7;
-  ctx.beginPath();
-  ctx.moveTo(cx - 200, cy); ctx.lineTo(cx - 20, cy);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx + 20, cy); ctx.lineTo(cx + 200, cy);
-  ctx.stroke();
-  drawStar(ctx, cx, cy, 20, 6, color);
-  ctx.globalAlpha = 1;
-}
-
-function scatterStars(ctx, color) {
-  const positions = [
-    [80, 200], [W - 80, 220], [100, H - 150], [W - 100, H - 160],
-    [60, 500], [W - 60, 520], [200, 80], [W - 200, 90],
-  ];
-  for (const [x, y] of positions) {
-    ctx.globalAlpha = 0.35;
-    drawStar(ctx, x, y, 10, 4, color, true);
-    ctx.globalAlpha = 1;
-  }
-}
-
-// ─────────────────────────────────────────
-// Download helpers
-// ─────────────────────────────────────────
-function downloadCard(index, name) {
-  const safeName = name.replace(/[^a-zA-Z0-9\u0600-\u06FF ]/g, '').replace(/\s+/g, '_');
-  const a = document.createElement('a');
-  a.href = canvases[index].toDataURL('image/png');
-  a.download = `Ramadan_${DESIGNS[index].label.replace(/\s/g, '_')}_${safeName}.png`;
+// ════════════════════════════════════════
+// Download
+// ════════════════════════════════════════
+function downloadCard(i,name) {
+  const safe=name.replace(/[^a-zA-Z0-9\u0600-\u06FF ]/g,'').replace(/\s+/g,'_');
+  const a=document.createElement('a');
+  a.href=canvases[i].toDataURL('image/png');
+  a.download=`Ramadan_${DESIGNS[i].label.replace(/\s/g,'_')}_${safe}.png`;
   a.click();
 }
-
 async function downloadAll() {
-  const name = document.getElementById('nameInput').value.trim();
-  for (let i = 0; i < canvases.length; i++) {
-    await new Promise(r => setTimeout(r, 250));
-    downloadCard(i, name);
-  }
+  const name=document.getElementById('nameInput').value.trim();
+  for(let i=0;i<canvases.length;i++){ await new Promise(r=>setTimeout(r,300)); downloadCard(i,name); }
 }
 
-// Allow pressing Enter to generate
-document.getElementById('nameInput').addEventListener('keydown', e => {
-  if (e.key === 'Enter') generateCards();
-});
+document.getElementById('nameInput').addEventListener('keydown',e=>{ if(e.key==='Enter') generateCards(); });
 </script>
 </body>
 </html>
