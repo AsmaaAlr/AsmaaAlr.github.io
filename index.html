@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ramadan Mubarak Card Generator</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,400&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --deep: #0d1b2a;
+    --navy: #1a2d45;
+    --cream: #f5eedc;
+    --accent: #7b4f2a;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--deep);
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── background stars ── */
+  body::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0;
+    background-image:
+      radial-gradient(1px 1px at 12% 18%, rgba(201,168,76,.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 7%, rgba(201,168,76,.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 58% 22%, rgba(201,168,76,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 78% 12%, rgba(201,168,76,.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 34%, rgba(201,168,76,.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 5% 55%, rgba(201,168,76,.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 44% 48%, rgba(201,168,76,.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 67% 71%, rgba(201,168,76,.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 23% 82%, rgba(201,168,76,.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 88% 88%, rgba(201,168,76,.3) 0%, transparent 100%);
+    pointer-events: none;
+  }
+
+  .page-wrap {
+    position: relative; z-index: 1;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── header ── */
+  header { text-align: center; margin-bottom: 48px; }
+
+  .crescent {
+    font-size: 56px;
+    display: block;
+    animation: sway 4s ease-in-out infinite;
+    filter: drop-shadow(0 0 18px rgba(201,168,76,.6));
+  }
+  @keyframes sway {
+    0%,100% { transform: rotate(-6deg); }
+    50% { transform: rotate(6deg); }
+  }
+
+  h1 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: clamp(1.4rem, 5vw, 2.4rem);
+    color: var(--gold-light);
+    letter-spacing: .08em;
+    text-shadow: 0 0 30px rgba(201,168,76,.4);
+    margin: 12px 0 6px;
+  }
+  .subtitle {
+    font-size: 1.1rem;
+    font-style: italic;
+    color: rgba(245,238,220,.6);
+    letter-spacing: .12em;
+  }
+
+  /* ── divider ── */
+  .divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 32px 0;
+    color: var(--gold);
+    font-size: .85rem; letter-spacing: .2em;
+  }
+  .divider::before, .divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  /* ── input section ── */
+  .input-section {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(201,168,76,.25);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 40px;
+    backdrop-filter: blur(4px);
+  }
+
+  .input-section label {
+    display: block;
+    font-size: 1.05rem;
+    letter-spacing: .1em;
+    color: var(--gold-light);
+    margin-bottom: 12px;
+  }
+
+  .name-row {
+    display: flex; gap: 12px; flex-wrap: wrap;
+  }
+
+  input[type="text"] {
+    flex: 1; min-width: 200px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(201,168,76,.4);
+    border-radius: 8px;
+    padding: 14px 20px;
+    color: var(--cream);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    outline: none;
+    transition: border-color .25s, box-shadow .25s;
+  }
+  input[type="text"]::placeholder { color: rgba(245,238,220,.3); }
+  input[type="text"]:focus {
+    border-color: var(--gold);
+    box-shadow: 0 0 0 3px rgba(201,168,76,.15);
+  }
+
+  .btn-generate {
+    background: linear-gradient(135deg, var(--gold), #a07c30);
+    border: none;
+    border-radius: 8px;
+    padding: 14px 28px;
+    color: var(--deep);
+    font-family: 'Cinzel Decorative', serif;
+    font-size: .85rem;
+    letter-spacing: .08em;
+    cursor: pointer;
+    transition: transform .18s, box-shadow .18s;
+    white-space: nowrap;
+  }
+  .btn-generate:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 24px rgba(201,168,76,.35);
+  }
+  .btn-generate:active { transform: translateY(0); }
+
+  /* ── cards grid ── */
+  .cards-header {
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 12px;
+    margin-bottom: 24px;
+  }
+  .cards-header h2 {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: 1rem;
+    color: var(--gold-light);
+    letter-spacing: .1em;
+  }
+
+  .btn-download-all {
+    background: transparent;
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 10px 20px;
+    color: var(--gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    letter-spacing: .08em;
+    cursor: pointer;
+    transition: background .2s, color .2s;
+  }
+  .btn-download-all:hover {
+    background: var(--gold);
+    color: var(--deep);
+  }
+
+  .cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 24px;
+  }
+
+  .card-item {
+    background: rgba(255,255,255,.04);
+    border: 1px solid rgba(201,168,76,.2);
+    border-radius: 14px;
+    overflow: hidden;
+    transition: transform .25s, border-color .25s;
+  }
+  .card-item:hover {
+    transform: translateY(-4px);
+    border-color: rgba(201,168,76,.6);
+  }
+
+  .card-item canvas {
+    display: block;
+    width: 100%;
+    height: auto;
+    cursor: pointer;
+  }
+
+  .card-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid rgba(201,168,76,.1);
+  }
+  .card-name-label {
+    font-size: .9rem;
+    color: rgba(245,238,220,.55);
+    font-style: italic;
+  }
+
+  .btn-dl {
+    background: linear-gradient(135deg, var(--gold), #a07c30);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    color: var(--deep);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: .95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .15s;
+  }
+  .btn-dl:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(201,168,76,.3);
+  }
+
+  /* ── image loader section ── */
+  .image-loader {
+    background: rgba(201,168,76,.06);
+    border: 1px dashed rgba(201,168,76,.4);
+    border-radius: 16px;
+    padding: 28px 32px;
+    margin-bottom: 28px;
+  }
+  .image-loader-title {
+    font-family: 'Cinzel Decorative', serif;
+    font-size: .85rem;
+    color: var(--gold-light);
+    letter-spacing: .1em;
+    margin-bottom: 6px;
+  }
+  .image-loader-desc {
+    font-size: .95rem;
+    font-style: italic;
+    color: rgba(245,238,220,.5);
+    margin-bottom: 18px;
+    line-height: 1.5;
+  }
+  .image-loader-desc strong { color: rgba(245,238,220,.8); font-style: normal; }
+
+  .image-slots {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 12px;
+  }
+  .image-slot {
+    position: relative;
+    aspect-ratio: 1;
+    border: 1.5px dashed rgba(201,168,76,.35);
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: border-color .2s;
+    background: rgba(255,255,255,.03);
+  }
+  .image-slot:hover { border-color: var(--gold); }
+  .image-slot input[type="file"] {
+    position: absolute; inset: 0;
+    opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    min-width: unset;
+  }
+  .image-slot .slot-preview {
+    position: absolute; inset: 0;
+    background-size: cover;
+    background-position: center;
+  }
+  .image-slot .slot-label {
+    position: absolute; inset: 0;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 6px;
+    color: rgba(201,168,76,.6);
+    font-size: .8rem;
+    letter-spacing: .08em;
+    pointer-events: none;
+    transition: opacity .2s;
+  }
+  .image-slot .slot-label .slot-icon { font-size: 1.6rem; }
+  .image-slot.loaded .slot-label { opacity: 0; }
+  .image-slot.loaded { border-color: var(--gold); border-style: solid; }
+
+  .loader-status {
+    margin-top: 14px;
+    font-size: .9rem;
+    font-style: italic;
+    color: var(--gold);
+    min-height: 20px;
+  }
+
+  /* ── placeholder state ── */
+  .placeholder-msg {
+    text-align: center;
+    padding: 60px 20px;
+    color: rgba(245,238,220,.35);
+    font-style: italic;
+    font-size: 1.15rem;
+    letter-spacing: .06em;
+    grid-column: 1 / -1;
+  }
+
+  /* ── footer ── */
+  footer {
+    text-align: center;
+    margin-top: 64px;
+    font-size: .85rem;
+    color: rgba(245,238,220,.25);
+    letter-spacing: .1em;
+  }
+</style>
+</head>
+<body>
+<div class="page-wrap">
+
+  <header>
+    <span class="crescent">☽</span>
+    <h1>Ramadan Mubarak</h1>
+    <p class="subtitle">Personalised Card Generator</p>
+  </header>
+
+  <!-- ── Image Loader: only shown when running locally ── -->
+  <div class="image-loader" id="imageLoader" style="display:none">
+    <div class="image-loader-title">🖼 Load Your 5 Card Images</div>
+    <p class="image-loader-desc">
+      Your browser blocks local files for security when you open HTML by double-clicking.<br>
+      Click each slot below to load your images — <strong>you only need to do this once per session.</strong><br>
+      On Azure this section disappears automatically.
+    </p>
+    <div class="image-slots" id="imageSlots"></div>
+    <div class="loader-status" id="loaderStatus">0 / 5 images loaded  (or generate now to preview with built-in designs)</div>
+  </div>
+
+  <div class="input-section">
+    <label for="nameInput">Enter the recipient's name</label>
+    <div class="name-row">
+      <input type="text" id="nameInput" placeholder="e.g. Ahmed Al-Rashidi" maxlength="40" />
+      <button class="btn-generate" onclick="generateCards()">✦ Generate Cards</button>
+    </div>
+  </div>
+
+  <div class="divider">✦ YOUR CARDS ✦</div>
+
+  <div class="cards-header" id="cardsHeader" style="display:none">
+    <h2>5 Designs Ready</h2>
+    <button class="btn-download-all" onclick="downloadAll()">⬇ Download All</button>
+  </div>
+
+  <div class="cards-grid" id="cardsGrid">
+    <p class="placeholder-msg" id="placeholderMsg">Enter a name above and press <em>Generate Cards</em> to create personalised Ramadan cards ✦</p>
+  </div>
+
+  <footer>
+    <p>Ramadan Kareem &nbsp;•&nbsp; رمضان كريم</p>
+  </footer>
+</div>
+
+<script>
+// ─────────────────────────────────────────
+// CONFIGURATION
+// Set USE_IMAGES = true to use your own card images.
+// On Azure: images are loaded from cards/card1.jpg etc.
+// Locally: use the file picker that appears on the page.
+// ─────────────────────────────────────────
+const USE_IMAGES = true;
+const IMAGE_PATHS = [
+  'cards/card1.jpg',
+  'cards/card2.jpg',
+  'cards/card3.jpg',
+  'cards/card4.jpg',
+  'cards/card5.jpg',
+];
+
+// Stores locally-picked image data URLs (for file:// mode)
+const localImageData = [null, null, null, null, null];
+
+// Detect if running locally (file:// protocol)
+const IS_LOCAL = location.protocol === 'file:';
+
+// ── Setup image loader UI if running locally ──
+window.addEventListener('DOMContentLoaded', () => {
+  if (USE_IMAGES && IS_LOCAL) {
+    document.getElementById('imageLoader').style.display = 'block';
+    buildImageSlots();
+  }
+});
+
+function buildImageSlots() {
+  const container = document.getElementById('imageSlots');
+  for (let i = 0; i < 5; i++) {
+    const slot = document.createElement('div');
+    slot.className = 'image-slot';
+    slot.id = `slot-${i}`;
+
+    const preview = document.createElement('div');
+    preview.className = 'slot-preview';
+    preview.id = `preview-${i}`;
+
+    const label = document.createElement('div');
+    label.className = 'slot-label';
+    label.innerHTML = `<span class="slot-icon">🌙</span><span>Card ${i + 1}</span>`;
+
+    const fileInput = document.createElement('input');
+    fileInput.type = 'file';
+    fileInput.accept = 'image/*';
+    fileInput.addEventListener('change', (e) => handleSlotFile(e, i));
+
+    slot.appendChild(preview);
+    slot.appendChild(label);
+    slot.appendChild(fileInput);
+    container.appendChild(slot);
+  }
+}
+
+function handleSlotFile(e, index) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    localImageData[index] = ev.target.result;
+    // show preview
+    document.getElementById(`preview-${index}`).style.backgroundImage = `url(${ev.target.result})`;
+    document.getElementById(`slot-${index}`).classList.add('loaded');
+    // update status
+    const loaded = localImageData.filter(Boolean).length;
+    document.getElementById('loaderStatus').textContent =
+      loaded === 5
+        ? '✅ All 5 images loaded — ready to generate!'
+        : `${loaded} / 5 images loaded  (or generate now to preview with built-in designs)`;
+  };
+  reader.readAsDataURL(file);
+}
+
+// Card canvas size
+const W = 1080, H = 1080;
+
+// ─────────────────────────────────────────
+// Card design definitions (used when USE_IMAGES = false)
+// ─────────────────────────────────────────
+const DESIGNS = [
+  {
+    label: 'Midnight Blue',
+    bg: ['#0a1628', '#1a3a5c'],
+    accent: '#c9a84c',
+    arabicMsg: 'رمضان كريم',
+    engMsg: 'Ramadan Mubarak',
+    pattern: 'geo',
+  },
+  {
+    label: 'Desert Gold',
+    bg: ['#2c1810', '#7b4f2a'],
+    accent: '#e8c97a',
+    arabicMsg: 'رمضان مبارك',
+    engMsg: 'Blessed Ramadan',
+    pattern: 'arch',
+  },
+  {
+    label: 'Emerald Night',
+    bg: ['#0a2318', '#0d4a2f'],
+    accent: '#c9a84c',
+    arabicMsg: 'كل عام وأنتم بخير',
+    engMsg: 'May Peace Be Upon You',
+    pattern: 'star',
+  },
+  {
+    label: 'Royal Plum',
+    bg: ['#1a0a2e', '#3d1a6b'],
+    accent: '#e8c97a',
+    arabicMsg: 'رمضان كريم',
+    engMsg: 'A Blessed Ramadan',
+    pattern: 'geo',
+  },
+  {
+    label: 'Rose Dusk',
+    bg: ['#2e0a1a', '#7b1a3f'],
+    accent: '#e8c97a',
+    arabicMsg: 'رمضان مبارك',
+    engMsg: 'Ramadan Kareem',
+    pattern: 'arch',
+  },
+];
+
+// ─────────────────────────────────────────
+// Main generator
+// ─────────────────────────────────────────
+let canvases = [];
+
+async function generateCards() {
+  const name = document.getElementById('nameInput').value.trim();
+  if (!name) {
+    document.getElementById('nameInput').focus();
+    return;
+  }
+
+  // If running locally, warn if images not fully loaded but still continue
+
+  const grid = document.getElementById('cardsGrid');
+  const header = document.getElementById('cardsHeader');
+
+  grid.innerHTML = '';
+  canvases = [];
+  header.style.display = 'flex';
+
+  for (let i = 0; i < 5; i++) {
+    const canvas = document.createElement('canvas');
+    canvas.width = W;
+    canvas.height = H;
+    canvases.push(canvas);
+
+    const item = document.createElement('div');
+    item.className = 'card-item';
+
+    const footer = document.createElement('div');
+    footer.className = 'card-footer';
+    footer.innerHTML = `<span class="card-name-label">${DESIGNS[i].label}</span>`;
+
+    const dlBtn = document.createElement('button');
+    dlBtn.className = 'btn-dl';
+    dlBtn.textContent = '⬇ Download';
+    dlBtn.onclick = () => downloadCard(i, name);
+    footer.appendChild(dlBtn);
+
+    item.appendChild(canvas);
+    item.appendChild(footer);
+    grid.appendChild(item);
+
+    if (USE_IMAGES && (!IS_LOCAL || localImageData[i])) {
+      // Azure: load from cards/ folder. Local: use picked file if available
+      const src = (IS_LOCAL && localImageData[i]) ? localImageData[i] : IMAGE_PATHS[i];
+      await drawWithImage(canvas, src, name, DESIGNS[i]);
+    } else {
+      // Fallback: draw generated design (always works, no files needed)
+      drawDesign(canvas, DESIGNS[i], name);
+    }
+  }
+
+  // Scroll to cards
+  grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// ─────────────────────────────────────────
+// Draw a fully generated design
+// ─────────────────────────────────────────
+function drawDesign(canvas, design, name) {
+  const ctx = canvas.getContext('2d');
+  const { bg, accent, arabicMsg, engMsg, pattern } = design;
+
+  // Background gradient
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  grad.addColorStop(0, bg[0]);
+  grad.addColorStop(1, bg[1]);
+  ctx.fillStyle = grad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Decorative pattern
+  ctx.globalAlpha = 0.07;
+  if (pattern === 'geo') drawGeoPattern(ctx, accent);
+  if (pattern === 'arch') drawArchPattern(ctx, accent);
+  if (pattern === 'star') drawStarPattern(ctx, accent);
+  ctx.globalAlpha = 1;
+
+  // Outer border
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 6;
+  ctx.strokeRect(30, 30, W - 60, H - 60);
+
+  // Inner border
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.5;
+  ctx.strokeRect(48, 48, W - 96, H - 96);
+  ctx.globalAlpha = 1;
+
+  // Corner ornaments
+  drawCornerOrnaments(ctx, accent);
+
+  // Crescent moon
+  drawCrescent(ctx, W / 2, 180, 70, accent);
+
+  // Star above
+  drawStar(ctx, W / 2, 100, 18, 5, accent);
+
+  // Arabic message
+  ctx.fillStyle = accent;
+  ctx.font = `bold 72px 'Scheherazade New', 'Traditional Arabic', serif`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(arabicMsg, W / 2, 340);
+
+  // English message
+  ctx.fillStyle = '#f5eedc';
+  ctx.globalAlpha = 0.85;
+  ctx.font = `italic 38px 'Cormorant Garamond', serif`;
+  ctx.fillText(engMsg, W / 2, 420);
+  ctx.globalAlpha = 1;
+
+  // Horizontal line
+  ctx.strokeStyle = accent;
+  ctx.lineWidth = 1;
+  ctx.globalAlpha = 0.5;
+  ctx.beginPath();
+  ctx.moveTo(180, 480); ctx.lineTo(W - 180, 480);
+  ctx.stroke();
+  ctx.globalAlpha = 1;
+
+  // Name greeting
+  ctx.fillStyle = '#f5eedc';
+  ctx.font = `300 32px 'Cormorant Garamond', serif`;
+  ctx.fillText('Wishing you and your family', W / 2, 540);
+
+  // Name
+  ctx.fillStyle = accent;
+  ctx.font = `600 68px 'Cormorant Garamond', serif`;
+  ctx.fillText(name, W / 2, 630);
+
+  // Sub line
+  ctx.fillStyle = '#f5eedc';
+  ctx.font = `italic 300 30px 'Cormorant Garamond', serif`;
+  ctx.globalAlpha = 0.75;
+  ctx.fillText('a blessed and joyful Ramadan', W / 2, 700);
+  ctx.globalAlpha = 1;
+
+  // Bottom ornament
+  drawBottomOrnament(ctx, accent, W / 2, 820);
+
+  // Stars scatter
+  scatterStars(ctx, accent);
+}
+
+// ─────────────────────────────────────────
+// Draw with a real image + name overlay
+// ─────────────────────────────────────────
+function drawWithImage(canvas, src, name, design) {
+  return new Promise((resolve) => {
+    const ctx = canvas.getContext('2d');
+    const img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, W, H);
+
+      // Semi-transparent overlay for readability
+      const grad = ctx.createLinearGradient(0, H * 0.4, 0, H);
+      grad.addColorStop(0, 'rgba(0,0,0,0)');
+      grad.addColorStop(1, 'rgba(0,0,0,0.7)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(0, 0, W, H);
+
+      // Name
+      ctx.fillStyle = design.accent;
+      ctx.font = `600 72px 'Cormorant Garamond', serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(name, W / 2, H * 0.72);
+
+      ctx.fillStyle = '#f5eedc';
+      ctx.font = `italic 300 36px 'Cormorant Garamond', serif`;
+      ctx.globalAlpha = 0.85;
+      ctx.fillText('رمضان كريم  •  Ramadan Mubarak', W / 2, H * 0.82);
+      ctx.globalAlpha = 1;
+
+      resolve();
+    };
+    img.onerror = () => {
+      // fallback to generated design if image fails to load
+      drawDesign(canvas, design, name);
+      resolve();
+    };
+    img.src = src;
+  });
+}
+
+// ─────────────────────────────────────────
+// Pattern helpers
+// ─────────────────────────────────────────
+function drawGeoPattern(ctx, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  const size = 80;
+  for (let x = 0; x < W + size; x += size) {
+    for (let y = 0; y < H + size; y += size) {
+      ctx.beginPath();
+      ctx.moveTo(x, y - size / 2);
+      ctx.lineTo(x + size / 2, y);
+      ctx.lineTo(x, y + size / 2);
+      ctx.lineTo(x - size / 2, y);
+      ctx.closePath();
+      ctx.stroke();
+    }
+  }
+}
+
+function drawArchPattern(ctx, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1;
+  for (let x = 0; x < W; x += 90) {
+    for (let y = 0; y < H; y += 90) {
+      ctx.beginPath();
+      ctx.arc(x + 45, y + 45, 38, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+  }
+}
+
+function drawStarPattern(ctx, color) {
+  ctx.fillStyle = color;
+  for (let x = 60; x < W; x += 120) {
+    for (let y = 60; y < H; y += 120) {
+      drawStar(ctx, x, y, 12, 8, color, true);
+    }
+  }
+}
+
+function drawStar(ctx, cx, cy, r, points, color, fill = false) {
+  const innerR = r * 0.4;
+  ctx.beginPath();
+  for (let i = 0; i < points * 2; i++) {
+    const angle = (i * Math.PI) / points - Math.PI / 2;
+    const rad = i % 2 === 0 ? r : innerR;
+    const x = cx + Math.cos(angle) * rad;
+    const y = cy + Math.sin(angle) * rad;
+    i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+  }
+  ctx.closePath();
+  if (fill) {
+    ctx.fillStyle = color;
+    ctx.fill();
+  } else {
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2;
+    ctx.stroke();
+  }
+}
+
+function drawCrescent(ctx, cx, cy, r, color) {
+  ctx.fillStyle = color;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = '#1a2d45'; // cover to create crescent
+  ctx.beginPath();
+  ctx.arc(cx + r * 0.4, cy - r * 0.1, r * 0.82, 0, Math.PI * 2);
+  ctx.fill();
+
+  // glow
+  const glow = ctx.createRadialGradient(cx, cy, r * 0.5, cx, cy, r * 2);
+  glow.addColorStop(0, color + '40');
+  glow.addColorStop(1, 'transparent');
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 2, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawCornerOrnaments(ctx, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  const c = 60, s = 60;
+  const corners = [
+    [c, c, 1, 1],
+    [W - c, c, -1, 1],
+    [c, H - c, 1, -1],
+    [W - c, H - c, -1, -1],
+  ];
+  for (const [x, y, dx, dy] of corners) {
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+    ctx.lineTo(x + dx * s, y);
+    ctx.moveTo(x, y);
+    ctx.lineTo(x, y + dy * s);
+    ctx.moveTo(x + dx * 10, y + dy * 10);
+    ctx.arc(x + dx * 10, y + dy * 10, 8, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+function drawBottomOrnament(ctx, color, cx, cy) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.globalAlpha = 0.7;
+  ctx.beginPath();
+  ctx.moveTo(cx - 200, cy); ctx.lineTo(cx - 20, cy);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + 20, cy); ctx.lineTo(cx + 200, cy);
+  ctx.stroke();
+  drawStar(ctx, cx, cy, 20, 6, color);
+  ctx.globalAlpha = 1;
+}
+
+function scatterStars(ctx, color) {
+  const positions = [
+    [80, 200], [W - 80, 220], [100, H - 150], [W - 100, H - 160],
+    [60, 500], [W - 60, 520], [200, 80], [W - 200, 90],
+  ];
+  for (const [x, y] of positions) {
+    ctx.globalAlpha = 0.35;
+    drawStar(ctx, x, y, 10, 4, color, true);
+    ctx.globalAlpha = 1;
+  }
+}
+
+// ─────────────────────────────────────────
+// Download helpers
+// ─────────────────────────────────────────
+function downloadCard(index, name) {
+  const safeName = name.replace(/[^a-zA-Z0-9\u0600-\u06FF ]/g, '').replace(/\s+/g, '_');
+  const a = document.createElement('a');
+  a.href = canvases[index].toDataURL('image/png');
+  a.download = `Ramadan_${DESIGNS[index].label.replace(/\s/g, '_')}_${safeName}.png`;
+  a.click();
+}
+
+async function downloadAll() {
+  const name = document.getElementById('nameInput').value.trim();
+  for (let i = 0; i < canvases.length; i++) {
+    await new Promise(r => setTimeout(r, 250));
+    downloadCard(i, name);
+  }
+}
+
+// Allow pressing Enter to generate
+document.getElementById('nameInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') generateCards();
+});
+</script>
+</body>
+</html>
